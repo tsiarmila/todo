@@ -1,0 +1,125 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+h1 {
+  text-align: center;
+}
+
+h2 {
+  text-align: center;
+}
+
+input[type="text"] {
+  width: calc(100% - 80px);
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #5F7FFF; //#4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #40DCA5; //#45a049;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  margin-bottom: 5px;
+}
+
+.todo-item {
+    display: flex;
+    justify-content: space-between;
+    position: relative; /* Размещаем элемент относительно его обычного местоположения */
+    padding-right: 40px; /* Добавляем отступ справа для кнопки */
+}
+
+.todo-text {
+    flex-grow: 1; /* Расширяем текст задачи на всё доступное пространство */
+    text-decoration: none; /* отменяем перечеркивание для текста задачи */
+}
+
+.todo-item button {
+    margin-left: 10px; /* добавьте отступ между текстом задачи и кнопкой Delete */
+}
+
+.check-square {
+  width: 20px;
+  height: 20px;
+  left: 5px; /* Располагаем изображение слева */
+  cursor: pointer;
+  opacity: 0.1;
+}
+
+.delete-button {
+  background-color: #FF5F5F;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+#save-todo-button {
+  position: absolute;
+  left: 61%;
+  top: 10px;
+  margin-bottom: 0;
+  font-size: medium;
+}
+
+#bye-donut-button {
+  position: absolute;
+  left: 55%;
+  bottom: 30px;
+  margin-bottom: 0;
+  font-size: medium;
+}
+
+#currentDate {
+  font-size: medium;
+}
+
+.completed {
+    text-decoration: line-through;
+}
+
+.check-square.completed {
+    opacity: 1;
+}
+
+.priority-star {
+    margin: 0 30px; /* Добавляем отступ слева */
+}
+
+#cookie-message {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+  text-align: center;
+}
