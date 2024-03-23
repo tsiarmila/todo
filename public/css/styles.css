@@ -97,10 +97,6 @@ li {
   font-size: medium;
 }
 
-#currentDate {
-  font-size: medium;
-}
-
 .completed {
     text-decoration: line-through;
 }
