@@ -53,12 +53,21 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             todoItem.appendChild(priorityStar);
 
+            const editButton = document.createElement('button');
+            editButton.textContent = '✏️';
+            editButton.classList.add('edit-button');
+            editButton.addEventListener('click', function(event) {
+                event.stopPropagation();
+                editTodo(todoItem, index);
+            });
+            todoItem.appendChild(editButton);
+
             const deleteButton = document.createElement('button');
-            deleteButton.textContent = 'Delete';
+            deleteButton.textContent = '🗑️';
             deleteButton.classList.add('delete-button');
-            deleteButton.addEventListener('click', function() {
+            deleteButton.addEventListener('click', function(event) {
                 event.stopPropagation(); // Остановить всплытие события
-                deleteTodo(index);
+                confirmDelete(event, index);
             });
             todoItem.appendChild(deleteButton);
 
@@ -87,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
             todoInput.value = '';
         }
     }
-console.log('todos', todos)
+    console.log('todos', todos)
 
     function togglePriority(index) {
         todos[index].priority = !todos[index].priority;
@@ -98,6 +107,41 @@ console.log('todos', todos)
         todos[index].completed = !todos[index].completed;
         saveTodos();
         renderTodos();
+    }
+    function editTodo(todoItem, index) {
+        const todoTextElement = todoItem.querySelector('.todo-text');
+        const newText = prompt("Edit task:", todoTextElement.textContent);
+        if (newText !== null) {
+            todos[index].text = newText.trim();
+            saveTodos();
+            renderTodos();
+        }
+    }
+
+
+    function confirmDelete(event, index) {
+        const modal = document.getElementById("myModal");
+        const confirmButton = document.querySelector(".confirm-button");
+        const closeButton = document.querySelector(".close-button");
+        const todoText = todos[index].text.substring(0, 20) + " ... ";
+
+        document.querySelector('.modal-content p').textContent = `Delete:  ${todoText} `;
+
+        modal.style.display = "block";
+
+        closeButton.onclick = function() {
+          modal.style.display = "none";
+        }
+        confirmButton.onclick = function() {
+          modal.style.display = "none";
+          deleteTodo(index);
+        }
+
+        window.onclick = function(event) {
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
+        }
     }
 
     function deleteTodo(index) {
