@@ -122,23 +122,19 @@ li {
 
 input.deadline-date {
   margin-bottom: 0;
-  padding-bottom: 0;
-  width: 42px;
+  padding: 10px 0 0;
+  width: 50px;
   border: none;
   right: 30px;
 }
 
-/* .calendar-container-date {
-  display: none;
-} */
-
 .priority-star {
-    font-size: 30px;
-    margin: 0 30px; /* Добавляем отступ слева */
+    /* font-size: 26px; */
+    margin: 0 10px; /* Добавляем отступ слева */
 }
 .priority {
-    font-size: 23px;
-    margin: 0 27px;
+    /* font-size: 23px; */
+    margin: 0 10px;
 }
 
 #cookie-message {
