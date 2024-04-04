@@ -41,11 +41,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const deadlineDate = document.createElement('input');
             deadlineDate.setAttribute('type', 'text');
-            deadlineDate.setAttribute('placeholder', 'Date');
+            deadlineDate.setAttribute('placeholder', '📆');
             deadlineDate.classList.add('deadline-date');
             // Инициализируем Flatpickr
             flatpickr(deadlineDate, {
-                // dateFormat: 'j M',
+                dateFormat: 'd M',
                 defaultDate: todo.deadLine, // Восстанавливаем сохраненную дату
                 onChange: function(selectedDates, dateStr) {
                     todos[index].deadLine = dateStr; // Сохраняем выбранную дату в объекте задачи
