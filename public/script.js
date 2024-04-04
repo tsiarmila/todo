@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const todoInput = document.getElementById('todo-input');
     const todoList = document.getElementById('todo-list');
     const completedList = document.getElementById('completed-list');
-
     let todos = JSON.parse(localStorage.getItem('todos')) || [];
 
     function saveTodos() {
@@ -40,6 +39,21 @@ document.addEventListener('DOMContentLoaded', function() {
             todoText.classList.add('todo-text'); // Добавляем класс для стилизации текста
             todoItem.appendChild(todoText);
 
+            const deadlineDate = document.createElement('input');
+            deadlineDate.setAttribute('type', 'text');
+            deadlineDate.setAttribute('placeholder', 'Date');
+            deadlineDate.classList.add('deadline-date');
+            // Инициализируем Flatpickr
+            flatpickr(deadlineDate, {
+                dateFormat: 'j M',
+                defaultDate: todo.deadLine, // Восстанавливаем сохраненную дату
+                onChange: function(selectedDates, dateStr) {
+                    todos[index].deadLine = dateStr; // Сохраняем выбранную дату в объекте задачи
+                    saveTodos();
+                }
+            });
+            todoItem.appendChild(deadlineDate);
+
             const priorityStar = document.createElement('span');
             priorityStar.textContent = '☆';
             priorityStar.classList.add('priority-star');
@@ -52,15 +66,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 togglePriority(index);
             });
             todoItem.appendChild(priorityStar);
-
-            const editButton = document.createElement('button');
-            editButton.textContent = '✏️';
-            editButton.classList.add('edit-button');
-            editButton.addEventListener('click', function(event) {
-                event.stopPropagation();
-                editTodo(todoItem, index);
-            });
-            todoItem.appendChild(editButton);
 
             const deleteButton = document.createElement('button');
             deleteButton.textContent = '🗑️';
@@ -80,9 +85,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             todoItem.addEventListener('click', function() {
+                editTodo(todoItem, index);
+            });
+            checkSquare.addEventListener('click', function() {
                 toggleCompleted(index);
             });
-            // todoList.appendChild(todoItem);
         });
     }
 
@@ -90,7 +97,14 @@ document.addEventListener('DOMContentLoaded', function() {
         event.preventDefault();
         const text = todoInput.value.trim();
         if (text !== '') {
-            todos.push({ text: text, completed: false });
+          const todo = {
+              text: text,
+              completed: false,
+              priority: false,
+              deadLine: null,
+              deadLineTime: null
+          };
+          todos.push(todo);
             saveTodos();
             renderTodos();
             todoInput.value = '';
@@ -108,16 +122,15 @@ document.addEventListener('DOMContentLoaded', function() {
         saveTodos();
         renderTodos();
     }
+
     function editTodo(todoItem, index) {
         const todoTextElement = todoItem.querySelector('.todo-text');
-        const newText = prompt("Edit task:", todoTextElement.textContent);
-        if (newText !== null) {
-            todos[index].text = newText.trim();
+        todoTextElement.contentEditable = true; // Разрешаем редактирование текста
+        todoTextElement.addEventListener('input', function() {
+            todos[index].text = todoTextElement.textContent; // Обновляем текст задачи в объекте todos
             saveTodos();
-            renderTodos();
-        }
+        });
     }
-
 
     function confirmDelete(event, index) {
         const modal = document.getElementById("myModal");

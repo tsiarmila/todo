@@ -69,7 +69,8 @@ li {
   height: 20px;
   left: 5px; /* Располагаем изображение слева */
   cursor: pointer;
-  opacity: 0.1;
+  opacity: 0.3;
+  margin-right: 5px;
 }
 
 .delete-button {
@@ -103,13 +104,13 @@ li {
   font-size: medium;
 }
 
-#bye-donut-button {
+/* #bye-donut-button {
   position: absolute;
   left: 55%;
   bottom: 30px;
   margin-bottom: 0;
   font-size: medium;
-}
+} */
 
 .completed {
     text-decoration: line-through;
@@ -119,9 +120,25 @@ li {
     opacity: 1;
 }
 
+input.deadline-date {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  width: 42px;
+  border: none;
+  right: 30px;
+}
+
+/* .calendar-container-date {
+  display: none;
+} */
+
 .priority-star {
-    font-size: 20px;
+    font-size: 30px;
     margin: 0 30px; /* Добавляем отступ слева */
+}
+.priority {
+    font-size: 23px;
+    margin: 0 27px;
 }
 
 #cookie-message {
@@ -156,18 +173,3 @@ li {
   border: 1px solid #888;
   width: 50%;
 }
-
-/* The Close Button */
-/* .close {
-  color: #aaaaaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-} */
-
-/* .close:hover,
-.close:focus {
-  color: #000;
-  text-decoration: none;
-  cursor: pointer;
-} */
