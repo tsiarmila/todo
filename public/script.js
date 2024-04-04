@@ -45,6 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
             deadlineDate.classList.add('deadline-date');
             // Инициализируем Flatpickr
             flatpickr(deadlineDate, {
+              disableMobile: "true",
                 dateFormat: 'd M',
                 defaultDate: todo.deadLine, // Восстанавливаем сохраненную дату
                 onChange: function(selectedDates, dateStr) {
