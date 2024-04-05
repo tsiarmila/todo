@@ -39,14 +39,36 @@ document.addEventListener('DOMContentLoaded', function() {
             todoText.classList.add('todo-text'); // Добавляем класс для стилизации текста
             todoItem.appendChild(todoText);
 
+            const deadlineTime = document.createElement('input');
+            deadlineTime.setAttribute('type', 'text');
+            deadlineTime.setAttribute('placeholder', '🕒');
+            deadlineTime.classList.add('deadline-date');
+
+            flatpickr(deadlineTime, {
+              disableMobile: true,
+              enableTime: true,
+              noCalendar: true,
+                dateFormat: 'H:i',
+                time_24hr: true,
+                defaultDate: todo.deadlineTime, // Восстанавливаем сохраненную дату
+                allowInput: true,
+                onChange: function(selectedDates, dateStr) {
+                    todos[index].deadlineTime = dateStr; // Сохраняем выбранную дату в объекте задачи
+                    saveTodos();
+                }
+            });
+            todoItem.appendChild(deadlineTime);
+
             const deadlineDate = document.createElement('input');
             deadlineDate.setAttribute('type', 'text');
             deadlineDate.setAttribute('placeholder', '📆');
             deadlineDate.classList.add('deadline-date');
-            // Инициализируем Flatpickr
+
             flatpickr(deadlineDate, {
               disableMobile: "true",
+              // minDate: "today",
                 dateFormat: 'd M',
+                allowInput: true,
                 defaultDate: todo.deadLine, // Восстанавливаем сохраненную дату
                 onChange: function(selectedDates, dateStr) {
                     todos[index].deadLine = dateStr; // Сохраняем выбранную дату в объекте задачи
@@ -103,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
               completed: false,
               priority: false,
               deadLine: null,
-              deadLineTime: null
+              deadlineTime: null
           };
           todos.push(todo);
             saveTodos();
