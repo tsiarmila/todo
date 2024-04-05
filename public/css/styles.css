@@ -21,7 +21,7 @@ h2 {
 }
 
 input[type="text"] {
-  width: calc(100% - 80px);
+  width: calc(100% - 25px);
   padding: 10px;
   margin-bottom: 10px;
 }
@@ -53,9 +53,13 @@ li {
     justify-content: space-between;
     position: relative; /* Размещаем элемент относительно его обычного местоположения */
     align-items: center;
+    /* border: 1px solid #ccc; */
+    /* background-color: #ccc; */
+    border-radius: 5px;
 }
 
 .todo-text {
+    white-space: pre-line;
     flex-grow: 1; /* Расширяем текст задачи на всё доступное пространство */
     text-decoration: none; /* отменяем перечеркивание для текста задачи */
 }
