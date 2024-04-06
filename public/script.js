@@ -240,3 +240,12 @@ document.addEventListener('DOMContentLoaded', function() {
 document.getElementById('accept-cookies').addEventListener('click', function() {
   document.getElementById('cookie-message').style.display = 'none';
 });
+
+if (localStorage.getItem('cookiesAccepted')) {
+  document.getElementById('cookie-message').style.display = 'none';
+}
+
+document.getElementById('accept-cookies').addEventListener('click', function() {
+  localStorage.setItem('cookiesAccepted', true);
+  document.getElementById('cookie-message').style.display = 'none';
+});

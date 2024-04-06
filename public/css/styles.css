@@ -169,3 +169,15 @@ input.deadline-date {
   border: 1px solid #888;
   width: 40%;
 }
+
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #adbeff;
+  color: #0056b3;
+  padding: 10px;
+  text-align: center; /* Выравнивание текста по центру */
+    font-family: "Sacramento", cursive;
+    font-size: 20px;
+}
