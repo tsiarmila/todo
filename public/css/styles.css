@@ -18,6 +18,7 @@ h1 {
 
 h2 {
   text-align: center;
+  margin: 0;
 }
 
 input[type="text"] {
@@ -53,7 +54,7 @@ li {
     justify-content: space-between;
     position: relative; /* Размещаем элемент относительно его обычного местоположения */
     align-items: center;
-    /* border: 1px solid #ccc; */
+    border: none;
     /* background-color: #ccc; */
     border-radius: 5px;
 }
@@ -99,8 +100,20 @@ li {
   font-size: medium;
 }
 
+.focus {
+    border: 4px solid yellow;
+}
+
+.attention {
+    border: 4px solid #FF5F5F;
+}
+
 .completed {
     text-decoration: line-through;
+}
+
+.completed-item {
+    border: none;
 }
 
 .check-square.completed {

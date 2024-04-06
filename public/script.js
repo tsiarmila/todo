@@ -9,6 +9,45 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.setItem('todos', JSON.stringify(todos));
     }
 
+    function checkDeadlineStatus(todoItem, todo) {
+      const currentTime = new Date();
+      let deadlineDateTime;
+
+      if (!todo.deadlineTime && !todo.deadLine) {
+          return todoItem;
+      }
+      // Если установлено только время, берем сегодняшнюю дату
+      if (todo.deadlineTime && !todo.deadLine) {
+          const today = new Date();
+          deadlineDateTime = new Date(today.getFullYear(), today.getMonth(), today.getDate(), parseInt(todo.deadlineTime.split(':')[0]), parseInt(todo.deadlineTime.split(':')[1]));
+      }
+      // Если установлена только дата, берем время 00:00
+      else if (!todo.deadlineTime && todo.deadLine) {
+          deadlineDateTime = new Date(todo.deadLine + ' 00:00');
+      }
+      // Если установлены и время, и дата
+      else {
+          deadlineDateTime = new Date(todo.deadLine + ' ' + todo.deadlineTime);
+      }
+
+      const timeDifference = deadlineDateTime - currentTime;
+      console.log("deadlineDateTime", deadlineDateTime);
+      console.log("currentTime", currentTime);
+      if (timeDifference <= 60 * 60 * 1000 && timeDifference > 0) {
+          todoItem.classList.remove('attention');
+          todoItem.classList.add('focus');
+          todo.focus = true; // Сохраняем статус
+      } else if (timeDifference < 0) {
+          todoItem.classList.remove('focus');
+          todoItem.classList.add('attention');
+          todo.focus = false;
+      } else {
+          todoItem.classList.remove('focus', 'attention');
+          todo.focus = false;
+          todo.attention = false;
+      } console.log('diff', timeDifference);
+    }
+
     function renderTodos() {
         todoList.innerHTML = '';
         completedList.innerHTML = '';
@@ -54,6 +93,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 allowInput: true,
                 onChange: function(selectedDates, dateStr) {
                     todos[index].deadlineTime = dateStr; // Сохраняем выбранную дату в объекте задачи
+                    checkDeadlineStatus(todoItem, todo);
                     saveTodos();
                 }
             });
@@ -61,17 +101,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const deadlineDate = document.createElement('input');
             deadlineDate.setAttribute('type', 'text');
-            deadlineDate.setAttribute('placeholder', '📆');
+            deadlineDate.setAttribute('placeholder', 'Today');
             deadlineDate.classList.add('deadline-date');
 
             flatpickr(deadlineDate, {
               disableMobile: "true",
               // minDate: "today",
-                dateFormat: 'd M',
+                dateFormat: 'd M Y',
                 allowInput: true,
                 defaultDate: todo.deadLine, // Восстанавливаем сохраненную дату
                 onChange: function(selectedDates, dateStr) {
                     todos[index].deadLine = dateStr; // Сохраняем выбранную дату в объекте задачи
+                    checkDeadlineStatus(todoItem, todo);
                     saveTodos();
                 }
             });
@@ -102,6 +143,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (todo.completed) {
                 checkSquare.classList.add("completed");
                 todoText.classList.add('completed'); // Применяем стиль только к тексту задачи
+                todoItem.classList.add('completed-item');
                 completedList.appendChild(todoItem); // Перемещаем выполненные
             } else {
                 todoList.appendChild(todoItem);
@@ -113,8 +155,12 @@ document.addEventListener('DOMContentLoaded', function() {
             checkSquare.addEventListener('click', function() {
                 toggleCompleted(index);
             });
+
+            checkDeadlineStatus(todoItem, todo);
+
         });
     }
+    setInterval(renderTodos, 1 * 60 * 1000);
 
     function addTodo(event) {
         event.preventDefault();
