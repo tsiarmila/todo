@@ -320,95 +320,103 @@ document.addEventListener('DOMContentLoaded', () => {
 document.getElementById("register-form").addEventListener("submit", async function(event) {
   event.preventDefault();
 
-  const form = event.target;
-  const email = form.elements.email.value;
-  const password = form.elements.password.value;
-  const name = form.elements.name.value;
+  if (formValidation() === true) {
+    const form = event.target;
+    const email = form.elements.email.value;
+    const password = form.elements.password.value;
+    const name = form.elements.name.value;
 
-  try {
-      const response = await fetch("/register", {
-          method: "POST",
-          headers: {
-              "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-              email: email,
-              password: password,
-              name: name
-          })
-      });
+    try {
+        const response = await fetch("/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email: email,
+                password: password,
+                name: name
+            })
+        });
 
-      if (!response.ok) {
-          throw new Error("Sending request error.");
-      }
+        if (!response.ok) {
+            throw new Error("Sending request error.");
+        }
 
-      const data = await response.json();
+        const data = await response.json();
 
-      if (data.emailExists) {
-            alert("Email already exists. Please LogIn");
-            document.getElementById('register').style.display = 'none';
-            const logInModal = document.getElementById('logIn');
-            logInModal.style.display = 'block';
-            const logInForm = document.getElementById('login-form');
-            logInForm.elements.email.value = email;
+        if (data.emailExists) {
+              alert("Email already exists. Please LogIn");
+              document.getElementById('register').style.display = 'none';
+              const logInModal = document.getElementById('logIn');
+              logInModal.style.display = 'block';
+              const logInForm = document.getElementById('login-form');
+              logInForm.elements.email.value = email;
 
-      } else if (data.success && data.redirectTo) {
-            window.location.href = data.redirectTo;
-            localStorage.setItem('loggedIn', 'true');
-            localStorage.setItem('email', email);
-      } else {
-            // Если не удалось перенаправить, выводим сообщение об успешной обработке
-            console.log("Form data received successfully!");
-      }
+        } else if (data.success && data.redirectTo) {
+              window.location.href = data.redirectTo;
+              localStorage.setItem('loggedIn', 'true');
+              localStorage.setItem('email', email);
+        } else {
+              // Если не удалось перенаправить, выводим сообщение об успешной обработке
+              console.log("Form data received successfully!");
+        }
 
-  } catch (error) {
-      console.error("Error:", error);
+    } catch (error) {
+        console.error("Error:", error);
+    }
+  } else {
+    console.log("Form validation failed!");
   }
 });
 
 document.getElementById("login-form").addEventListener("submit", async function(event) {
   event.preventDefault();
 
-  const form = event.target;
-  const email = form.elements.email.value;
-  const password = form.elements.password.value;
+  if (formValidation() === true) {
+    const form = event.target;
+    const email = form.elements.email.value;
+    const password = form.elements.password.value;
 
-  try {
-    const response = await fetch("/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-          email: email,
-          password: password
-      })
-    });
+    try {
+      const response = await fetch("/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            email: email,
+            password: password
+        })
+      });
 
-    if (!response.ok) {
-        throw new Error("Sending request error: " + response.status);
-    }
-    const data = await response.json();
-    if (data.success) {
-    // Пользователь успешно вошел
-      if (data.redirectTo) {
-        window.location.href = data.redirectTo;
-        localStorage.setItem('loggedIn', 'true');
-        localStorage.setItem('email', email);
+      if (!response.ok) {
+          throw new Error("Sending request error: " + response.status);
       }
-    } else {
-      // Ошибка при входе
-      alert(data.message);
-    }
+      const data = await response.json();
+      if (data.success) {
+      // Пользователь успешно вошел
+        if (data.redirectTo) {
+          window.location.href = data.redirectTo;
+          localStorage.setItem('loggedIn', 'true');
+          localStorage.setItem('email', email);
+        }
+      } else {
+        // Ошибка при входе
+        alert(data.message);
+      }
 
-  } catch (error) {
-    console.error("Error:", error);
-    // Обработка ошибки при отправке запроса
-    if (error instanceof TypeError) {
-      alert("Sending request error. Please check your internet connection.");
-    } else {
-      alert("An error has occurred. Please try again later.");
+    } catch (error) {
+      console.error("Error:", error);
+      // Обработка ошибки при отправке запроса
+      if (error instanceof TypeError) {
+        alert("Sending request error. Please check your internet connection.");
+      } else {
+        alert("An error has occurred. Please try again later.");
+      }
     }
+  } else {
+    console.log("Form validation failed!"); // Добавляем обработку неудачной валидации
   }
 });
 //showLoginModalLink
