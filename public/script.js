@@ -373,7 +373,7 @@ document.getElementById("register-form").addEventListener("submit", async functi
 document.getElementById("login-form").addEventListener("submit", async function(event) {
   event.preventDefault();
 
-  if (formValidation() === true) {
+  // if (formValidation() === true) {
     const form = event.target;
     const email = form.elements.email.value;
     const password = form.elements.password.value;
@@ -415,9 +415,9 @@ document.getElementById("login-form").addEventListener("submit", async function(
         alert("An error has occurred. Please try again later.");
       }
     }
-  } else {
-    console.log("Form validation failed!"); // Добавляем обработку неудачной валидации
-  }
+  // } else {
+  //   console.log("Form validation failed!"); // Добавляем обработку неудачной валидации
+  // }
 });
 //showLoginModalLink
 document.addEventListener('DOMContentLoaded', function() {

@@ -13,13 +13,13 @@
   <button id="logout-button">Log Out ⮞</button>
 
   <div id="main-container" class="container">
-  <h2> <%= kindOfDay %> </h2>
-    <h1>ToDo Today</h1>
-    <form id="todo-form" action="/" method="POST">
-      <input type="text" id="todo-input" name="todo" placeholder="Enter task...">
-    <button type="submit">Add Task</button>
-  </form>
-  <ul id="todo-list" class="todo-list">
+    <h2> <%= kindOfDay %> </h2>
+      <h1>ToDo Today</h1>
+      <form id="todo-form" action="/" method="POST">
+        <input type="text" id="todo-input" name="todo" placeholder="Enter task...">
+      <button type="submit">Add Task</button>
+    </form>
+    <ul id="todo-list" class="todo-list">
       <% items.forEach(function(item) { %>
         <li><%= item %></li>
       <% }); %>
@@ -58,7 +58,7 @@
         <h3>Welcome Back!</h3>
       </div>
       <label for="email">Email</label>
-      <input name="email" required focused></input>
+      <input name="email" required></input>
       <label for="password">Password</label>
       <input name="password" required></input>
       <button type="submit">Let Me In</button>
@@ -69,7 +69,7 @@
 <!-- Register-modal window -->
 <div id="register" class="modal">
   <div class="modal-content">
-    <form id="register-form" name='registration' action="/" method="POST" onSubmit="return formValidation();">
+    <form id="register-form" name='registration' action="/" method="POST">
       <div class="head-container">
         <h3>Register</h3>
         <a href="#" id="show-login-modal" class="show-modal"> or Log In</a><br>
