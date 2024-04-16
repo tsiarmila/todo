@@ -592,37 +592,25 @@ document.addEventListener('DOMContentLoaded', async function() {
       }
 
       // Добавляем обработчик событий для каждого dateHeader
-const dateHeaders = document.querySelectorAll('.container-history h4');
-dateHeaders.forEach(dateHeader => {
-  const expandSign = document.createElement('span');
-  expandSign.classList.add('expand-sign');
-  expandSign.textContent = 'ᐯ';
-  dateHeader.appendChild(expandSign);
+      const dateHeaders = document.querySelectorAll('.container-history h4');
+      dateHeaders.forEach(dateHeader => {
+        const expandSign = document.createElement('span');
+        expandSign.classList.add('expand-sign');
+        expandSign.textContent = 'ᐯ';
+        dateHeader.appendChild(expandSign);
 
-    dateHeader.addEventListener('click', () => {
-        const tasksList = dateHeader.nextElementSibling; // Получаем следующий элемент после dateHeader, который является tasksList
-        tasksList.style.display = tasksList.style.display === 'none' ? 'block' : 'none'; // Переключаем видимость tasksList
-        expandSign.textContent = tasksList.style.display === 'none' ? 'ᐯ' : 'ᐱ';
-    });
-});
+          dateHeader.addEventListener('click', () => {
+              const tasksList = dateHeader.nextElementSibling; // Получаем следующий элемент после dateHeader, который является tasksList
+              tasksList.style.display = tasksList.style.display === 'none' ? 'block' : 'none'; // Переключаем видимость tasksList
+              expandSign.textContent = tasksList.style.display === 'none' ? 'ᐯ' : 'ᐱ';
+          });
+      });
 
-// Изначально скрываем все tasksList
-const tasksLists = document.querySelectorAll('.container-history ul');
-tasksLists.forEach(tasksList => {
-    tasksList.style.display = 'none';
-});
-
-
-// if (todo.priority) {
-//     priorityStar.textContent = '⭐';
-//     priorityStar.classList.add('priority');
-// }
-// priorityStar.addEventListener('click', function(event) {
-//     event.stopPropagation();
-//     togglePriority(index);
-// });
-// todoItem.appendChild(priorityStar);
-
+      // Изначально скрываем все tasksList
+      const tasksLists = document.querySelectorAll('.container-history ul');
+      tasksLists.forEach(tasksList => {
+          tasksList.style.display = 'none';
+      });
 
     } catch (e) {
       console.error("Error:", e);
