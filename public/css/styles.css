@@ -6,7 +6,7 @@ body {
 
 .container {
   max-width: 600px;
-  margin: 30px auto 50px;
+  margin: 30px auto;
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -15,10 +15,18 @@ body {
 h1 {
   text-align: center;
 }
-
 h2 {
   text-align: center;
   margin: 0;
+}
+h3 {
+  display: inline-block;
+}
+h4 {
+position: relative;
+  text-align: center;
+  margin: 0;
+  cursor: pointer;
 }
 
 input[type="text"] {
@@ -54,7 +62,7 @@ li {
     justify-content: space-between;
     position: relative; /* Размещаем элемент относительно его обычного местоположения */
     align-items: center;
-    border: none;
+    border: 4px solid white;
     /* background-color: #ccc; */
     border-radius: 5px;
 }
@@ -94,8 +102,17 @@ li {
 
 #save-todo-button {
   position: absolute;
+  display: none;
   left: 61%;
   top: 10px;
+  margin-bottom: 0;
+  font-size: medium;
+}
+#logout-button {
+  position: absolute;
+  display: none;
+  top: 10px;
+  right: 10px;
   margin-bottom: 0;
   font-size: medium;
 }
@@ -135,7 +152,7 @@ input.deadline-date {
     cursor: pointer;
 }
 .priority {
-    margin: 0 10px;
+    margin: 0 7px;
     cursor: pointer;
 }
 
@@ -167,16 +184,76 @@ input.deadline-date {
   margin: auto;
   padding: 20px;
   border: 1px solid #888;
-  width: 40%;
+  width: 50%;
+  align-items: center;
 }
 
+#register input {
+  display: block;
+  width: 90%;
+  margin-bottom: 10px;
+  padding: 5px;
+  font-size: medium;
+}
+
+#logIn input {
+  display: block;
+  margin-bottom: 10px;
+  padding: 5px;
+  font-size: medium;
+}
+
+.show-modal {
+  position: relative;
+  left: 20%;
+  font-size: 18.72px;
+}
+/* // head-container in modal */
+.head-container {
+  margin-bottom: 40px;
+}
+
+#history-todo-list {
+  display: none;
+  margin-bottom: 100px;
+}
+.container-history {
+    /* display: flex; */
+    justify-content: space-between;
+    position: relative;
+  max-width: 600px;
+  margin: 10px auto;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+.expand-sign {
+    position: absolute;
+    top: 0;
+    right: 0;
+  background-color: white;
+  color: #5F7FFF;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  margin-right: 0;
+  cursor: pointer;
+
+}
+.date-header {
+    display: flex;
+    justify-content: space-between;
+    position: relative; /* Размещаем элемент относительно его обычного местоположения */
+    align-items: center;
+    border: 4px solid white;
+    border-radius: 5px;
+}
 footer {
   position: fixed;
   bottom: 0;
   width: 100%;
   background-color: #adbeff;
   color: #0056b3;
-  padding: 10px;
   text-align: center; /* Выравнивание текста по центру */
     font-family: "Sacramento", cursive;
     font-size: 20px;

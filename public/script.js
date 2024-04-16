@@ -1,3 +1,36 @@
+window.addEventListener('DOMContentLoaded', () => {
+  const isLoggedIn = localStorage.getItem('loggedIn');
+  const saveTodoButton = document.getElementById('save-todo-button');
+  const logoutButton = document.getElementById('logout-button');
+  const historyTodoList = document.getElementById('history-todo-list');
+
+  if (isLoggedIn) {
+    if (saveTodoButton && logoutButton && historyTodoList) {
+        saveTodoButton.style.display = 'none';
+        logoutButton.style.display = 'block';
+        historyTodoList.style.display = "block";
+    }
+  } else {
+    if (saveTodoButton && logoutButton && historyTodoList) {
+        saveTodoButton.style.display = 'block';
+        logoutButton.style.display = 'none';
+        historyTodoList.style.display = "none";
+    }
+  }
+});
+
+document.getElementById('logout-button').addEventListener('click', () => {
+  localStorage.removeItem('loggedIn');
+  localStorage.removeItem('email');
+  const saveTodoButton = document.getElementById('save-todo-button');
+  const historyTodoList = document.getElementById('history-todo-list');
+  if (saveTodoButton && historyTodoList) {
+      saveTodoButton.style.display = 'block';
+      document.getElementById('logout-button').style.display = 'none';
+      historyTodoList.style.display = "none";
+  }
+});
+
 document.addEventListener('DOMContentLoaded', function() {
     const todoForm = document.getElementById('todo-form');
     const todoInput = document.getElementById('todo-input');
@@ -31,8 +64,6 @@ document.addEventListener('DOMContentLoaded', function() {
       }
 
       const timeDifference = deadlineDateTime - currentTime;
-      console.log("deadlineDateTime", deadlineDateTime);
-      console.log("currentTime", currentTime);
       if (timeDifference <= 60 * 60 * 1000 && timeDifference > 0) {
           todoItem.classList.remove('attention');
           todoItem.classList.add('focus');
@@ -45,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
           todoItem.classList.remove('focus', 'attention');
           todo.focus = false;
           todo.attention = false;
-      } console.log('diff', timeDifference);
+      }
     }
 
     function renderTodos() {
@@ -171,7 +202,9 @@ document.addEventListener('DOMContentLoaded', function() {
               completed: false,
               priority: false,
               deadLine: null,
-              deadlineTime: null
+              deadlineTime: null,
+              focus: false,
+              attention: false
           };
           todos.push(todo);
             saveTodos();
@@ -186,8 +219,10 @@ document.addEventListener('DOMContentLoaded', function() {
         saveTodos();
         renderTodos();
     }
+
     function toggleCompleted(index) {
         todos[index].completed = !todos[index].completed;
+
         saveTodos();
         renderTodos();
     }
@@ -248,4 +283,354 @@ if (localStorage.getItem('cookiesAccepted')) {
 document.getElementById('accept-cookies').addEventListener('click', function() {
   localStorage.setItem('cookiesAccepted', true);
   document.getElementById('cookie-message').style.display = 'none';
+});
+
+function formValidation() {
+  const email = document.registration.email;
+    if(ValidateEmail(email)) {
+      return true;
+    }
+  return false;
+}
+function ValidateEmail(email) {
+  const mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+  if (email.match(mailformat)) {
+    return true;
+  } else {
+    alert("You have entered an invalid email address!");
+    return false;
+  }
+}
+// saveTodoButton
+document.addEventListener('DOMContentLoaded', () => {
+    const saveTodoButton = document.getElementById('save-todo-button');
+    const modal = document.getElementById('register');
+
+    saveTodoButton.addEventListener('click', () => {
+        modal.style.display = 'block';
+    });
+
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+});
+
+document.getElementById("register-form").addEventListener("submit", async function(event) {
+  event.preventDefault();
+
+  const form = event.target;
+  const email = form.elements.email.value;
+  const password = form.elements.password.value;
+  const name = form.elements.name.value;
+
+  try {
+      const response = await fetch("/register", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+              email: email,
+              password: password,
+              name: name
+          })
+      });
+
+      if (!response.ok) {
+          throw new Error("Sending request error.");
+      }
+
+      const data = await response.json();
+
+      if (data.emailExists) {
+            alert("Email already exists. Please LogIn");
+            document.getElementById('register').style.display = 'none';
+            const logInModal = document.getElementById('logIn');
+            logInModal.style.display = 'block';
+            const logInForm = document.getElementById('login-form');
+            logInForm.elements.email.value = email;
+
+      } else if (data.success && data.redirectTo) {
+            window.location.href = data.redirectTo;
+            localStorage.setItem('loggedIn', 'true');
+            localStorage.setItem('email', email);
+      } else {
+            // Если не удалось перенаправить, выводим сообщение об успешной обработке
+            console.log("Form data received successfully!");
+      }
+
+  } catch (error) {
+      console.error("Error:", error);
+  }
+});
+
+document.getElementById("login-form").addEventListener("submit", async function(event) {
+  event.preventDefault();
+
+  const form = event.target;
+  const email = form.elements.email.value;
+  const password = form.elements.password.value;
+
+  try {
+    const response = await fetch("/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+          email: email,
+          password: password
+      })
+    });
+
+    if (!response.ok) {
+        throw new Error("Sending request error: " + response.status);
+    }
+    const data = await response.json();
+    if (data.success) {
+    // Пользователь успешно вошел
+      if (data.redirectTo) {
+        window.location.href = data.redirectTo;
+        localStorage.setItem('loggedIn', 'true');
+        localStorage.setItem('email', email);
+      }
+    } else {
+      // Ошибка при входе
+      alert(data.message);
+    }
+
+  } catch (error) {
+    console.error("Error:", error);
+    // Обработка ошибки при отправке запроса
+    if (error instanceof TypeError) {
+      alert("Sending request error. Please check your internet connection.");
+    } else {
+      alert("An error has occurred. Please try again later.");
+    }
+  }
+});
+//showLoginModalLink
+document.addEventListener('DOMContentLoaded', function() {
+    const showLoginModalLink = document.getElementById('show-login-modal');
+
+    showLoginModalLink.addEventListener('click', function(event) {
+        event.preventDefault();
+        document.getElementById('register').style.display = 'none';
+        document.getElementById('logIn').style.display = 'block';
+
+        window.onclick = function(event) {
+          const modal = document.getElementById('logIn');
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
+        }
+    });
+});
+// showRegisterModalLink
+document.addEventListener('DOMContentLoaded', function() {
+    const showRegisterModalLink = document.getElementById('show-register-modal');
+
+    showRegisterModalLink.addEventListener('click', function(event) {
+        event.preventDefault();
+        document.getElementById('logIn').style.display = 'none';
+        document.getElementById('register').style.display = 'block';
+
+        window.onclick = function(event) {
+          const modal = document.getElementById('register');
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
+        }
+    });
+});
+
+function checkCompletedTasks() {
+    const todos = JSON.parse(localStorage.getItem('todos')) || [];
+    const userEmail = localStorage.getItem('email');
+
+    const currentDate = new Date();
+    const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const currentWeekday = weekdays[currentDate.getDay()];
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    const completedDate = `${currentWeekday}, ${year}-${month}-${day}`;
+
+    for (let index = 0; index < todos.length; index++) {
+      const todo = todos[index];
+      if (todo.completed) {
+        todo.completedAt = completedDate;
+
+        const response = fetch("/savehistory", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email: userEmail,
+                completedDate: completedDate,
+                todoText: todo.text
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error("Sending request error");
+        }
+
+        const data = response.json();
+        console.log("data", data);
+      } else {
+          todo.completedAt = null; // Обнуляем дату, если задача снова становится незавершенной
+
+          const response = fetch("/deletetask", {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                  email: userEmail,
+                  completedDate: completedDate,
+                  todoText: todo.text
+              })
+          })
+          .then(response => {
+              if (!response.ok) {
+                  throw new Error("Deleting request error");
+              }
+              return response.json();
+          })
+          .then(data => {
+              console.log("Task deleted:", data);
+          })
+          .catch(error => {
+              console.error("Error:", error);
+          });
+      }
+    };
+};
+// checkCompletedTasks
+document.addEventListener('DOMContentLoaded', function() {
+    checkCompletedTasks();
+    // Запускаем функцию checkCompletedTasks каждый час
+    setInterval(checkCompletedTasks, 1 * 60 * 60 * 1000);
+});
+// Вызываем функцию checkCompletedTasks при загрузке страницы
+window.addEventListener('load', checkCompletedTasks);
+
+document.addEventListener('DOMContentLoaded', async function() {
+  const isLoggedIn = localStorage.getItem('loggedIn');
+  const historyTodoList = document.getElementById('history-todo-list');
+
+  if (isLoggedIn) {
+    const email = localStorage.getItem('email');
+    console.log("userEmail", email);
+    try {
+      const response = await fetch("/tasks", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: email
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error("Sending email error.");
+      }
+
+      const data = await response.json();
+
+      // Отображение данных на странице
+      if (historyTodoList && data.history && data.history.length > 0) {
+        data.history.reverse().forEach(item => {
+          const date = item[0];
+          const tasks = item[1];
+          const today = new Date();
+          const dateString = new Date(date);
+
+          let dateHeaderText;
+          if (isSameDay(dateString, today)) {
+            return; // Пропускаем сегодняшний день
+          } else if (isYesterday(dateString, today)) {
+            dateHeaderText = "Done Yesterday";
+          } else {
+            dateHeaderText = `${date}`;
+          }
+
+          const dateContainer = document.createElement('div');
+          dateContainer.classList.add('container-history');
+
+          const dateHeader = document.createElement('h4');
+          dateHeader.textContent = dateHeaderText;
+          dateContainer.appendChild(dateHeader);
+
+          const tasksList = document.createElement('ul');
+          tasks.forEach(task => {
+            const taskItem = document.createElement('li');
+            taskItem.textContent = task;
+            taskItem.classList.add('todo-item');
+            tasksList.appendChild(taskItem);
+          });
+
+          dateContainer.appendChild(tasksList);
+          historyTodoList.appendChild(dateContainer);
+        });
+      }
+      function isSameDay(date1, date2) {
+        return date1.getFullYear() === date2.getFullYear() &&
+               date1.getMonth() === date2.getMonth() &&
+               date1.getDate() === date2.getDate();
+      }
+
+      function isYesterday(date1, date2) {
+        const yesterday = new Date(date2);
+        yesterday.setDate(date2.getDate() - 1);
+        return isSameDay(date1, yesterday);
+      }
+
+      // Добавляем обработчик событий для каждого dateHeader
+const dateHeaders = document.querySelectorAll('.container-history h4');
+dateHeaders.forEach(dateHeader => {
+  const expandSign = document.createElement('span');
+  expandSign.classList.add('expand-sign');
+  expandSign.textContent = 'ᐯ';
+  dateHeader.appendChild(expandSign);
+
+    dateHeader.addEventListener('click', () => {
+        const tasksList = dateHeader.nextElementSibling; // Получаем следующий элемент после dateHeader, который является tasksList
+        tasksList.style.display = tasksList.style.display === 'none' ? 'block' : 'none'; // Переключаем видимость tasksList
+        expandSign.textContent = tasksList.style.display === 'none' ? 'ᐯ' : 'ᐱ';
+    });
+});
+
+// Изначально скрываем все tasksList
+const tasksLists = document.querySelectorAll('.container-history ul');
+tasksLists.forEach(tasksList => {
+    tasksList.style.display = 'none';
+});
+
+
+// if (todo.priority) {
+//     priorityStar.textContent = '⭐';
+//     priorityStar.classList.add('priority');
+// }
+// priorityStar.addEventListener('click', function(event) {
+//     event.stopPropagation();
+//     togglePriority(index);
+// });
+// todoItem.appendChild(priorityStar);
+
+
+    } catch (e) {
+      console.error("Error:", e);
+    }
+  } else {
+    // Если пользователь не залогинен, скрываем список задач
+    if (historyTodoList) {
+      historyTodoList.style.display = "none";
+    }
+  }
 });
