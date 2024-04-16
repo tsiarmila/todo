@@ -19,23 +19,9 @@ app.use(cors());
 
 mongoose.connect("mongodb+srv://admin-milatsiar:ogWehgp2BXwWIqG0@cluster0.yhdmafz.mongodb.net/todoDB")
 userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: [true, "Name  or Pseudonym?"]
-  },
-  email: {
-    type: String,
-    required: [true, "Why no Email?"],
-    validate: {
-      validator: validator.isEmail,
-      message: '{VALUE} is not a valid email',
-      isAsync: false
-    }
-  },
-  password: {
-    type: String,
-    required: [true, "Why no Password?"]
-  },
+  name: String,
+  email: String,
+  password: String,
   savedHistory: {
       type: Map,
       of: [String] // массив строк (todoText)

@@ -286,7 +286,7 @@ document.getElementById('accept-cookies').addEventListener('click', function() {
 });
 
 function formValidation() {
-  const email = document.registration.email;
+  const email = document.registration.email.value;
     if(ValidateEmail(email)) {
       return true;
     }
