@@ -12,6 +12,9 @@ body {
   border-radius: 5px;
 }
 
+#main-container {
+  margin-top: 50px;
+}
 h1 {
   text-align: center;
 }
@@ -22,8 +25,9 @@ h2 {
 h3 {
   display: inline-block;
 }
+
 h4 {
-position: relative;
+  position: relative;
   text-align: center;
   margin: 0;
   cursor: pointer;

@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 app.use(express.static("public"));
 app.use(cors());
 
-mongoose.connect("mongodb://localhost:27017/todoDB")
+mongoose.connect("mongodb+srv://admin-milatsiar:ogWehgp2BXwWIqG0@cluster0.yhdmafz.mongodb.net/todoDB")
 userSchema = new mongoose.Schema({
   name: String,
   email: String,
