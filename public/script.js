@@ -304,15 +304,15 @@ function ValidateEmail(email) {
 // saveTodoButton
 document.addEventListener('DOMContentLoaded', () => {
     const saveTodoButton = document.getElementById('save-todo-button');
-    const modal = document.getElementById('register');
+    const modalSaveTodo = document.getElementById('register');
 
     saveTodoButton.addEventListener('click', () => {
-        modal.style.display = 'block';
+        modalSaveTodo.style.display = 'block';
     });
 
     window.onclick = function(event) {
-      if (event.target == modal) {
-        modal.style.display = "none";
+      if (event.target == modalSaveTodo) {
+        modalSaveTodo.style.display = "none";
       }
     }
 });
@@ -422,6 +422,7 @@ document.getElementById("login-form").addEventListener("submit", async function(
 //showLoginModalLink
 document.addEventListener('DOMContentLoaded', function() {
     const showLoginModalLink = document.getElementById('show-login-modal');
+    const modalLogin = document.getElementById('logIn');
 
     showLoginModalLink.addEventListener('click', function(event) {
         event.preventDefault();
@@ -429,9 +430,8 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('logIn').style.display = 'block';
 
         window.onclick = function(event) {
-          const modal = document.getElementById('logIn');
-          if (event.target == modal) {
-            modal.style.display = "none";
+          if (event.target == modalLogin) {
+            modalLogin.style.display = "none";
           }
         }
     });
@@ -439,6 +439,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // showRegisterModalLink
 document.addEventListener('DOMContentLoaded', function() {
     const showRegisterModalLink = document.getElementById('show-register-modal');
+    const modalRegister = document.getElementById('register');
 
     showRegisterModalLink.addEventListener('click', function(event) {
         event.preventDefault();
@@ -446,9 +447,8 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('register').style.display = 'block';
 
         window.onclick = function(event) {
-          const modal = document.getElementById('register');
-          if (event.target == modal) {
-            modal.style.display = "none";
+          if (event.target == modalRegister) {
+            modalRegister.style.display = "none";
           }
         }
     });
