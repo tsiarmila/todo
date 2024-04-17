@@ -158,6 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             priorityStar.addEventListener('click', function(event) {
                 event.stopPropagation();
+
                 togglePriority(index);
             });
             todoItem.appendChild(priorityStar);
@@ -175,6 +176,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 checkSquare.classList.add("completed");
                 todoText.classList.add('completed'); // Применяем стиль только к тексту задачи
                 todoItem.classList.add('completed-item');
+                deleteButton.style.display = 'none';
                 completedList.appendChild(todoItem); // Перемещаем выполненные
             } else {
                 todoList.appendChild(todoItem);
@@ -190,6 +192,24 @@ document.addEventListener('DOMContentLoaded', function() {
             checkDeadlineStatus(todoItem, todo);
 
         });
+        // Clear done yesterday
+        const completedItems = completedList.querySelectorAll('li');
+        const currentDate = new Date();
+         completedItems.forEach(completedItem => {
+             const taskText = completedItem.querySelector('.todo-text').textContent;
+             const todo = todos.find(todo => todo.text === taskText);
+
+             if (todo && todo.completedAt) {
+                 const completionDate = new Date(todo.completedAt);
+
+                 if (completionDate.getDate() === currentDate.getDate() - 1 &&
+                     completionDate.getMonth() === currentDate.getMonth() &&
+                     completionDate.getFullYear() === currentDate.getFullYear()) {
+                     // Удаляем элемент <li> из списка выполненных задач
+                     completedItem.remove();
+                 }
+             }
+         });
     }
     setInterval(renderTodos, 1 * 60 * 1000);
 
@@ -204,7 +224,8 @@ document.addEventListener('DOMContentLoaded', function() {
               deadLine: null,
               deadlineTime: null,
               focus: false,
-              attention: false
+              attention: false,
+              completedAt: null
           };
           todos.push(todo);
             saveTodos();
@@ -223,6 +244,11 @@ document.addEventListener('DOMContentLoaded', function() {
     function toggleCompleted(index) {
         todos[index].completed = !todos[index].completed;
 
+        if (todos[index].completed) {
+            todos[index].completedAt = new Date().toISOString().split(".")[0];
+        } else {
+            todos[index].completedAt = null;
+        }
         saveTodos();
         renderTodos();
     }
@@ -454,70 +480,78 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-function checkCompletedTasks() {
-    const todos = JSON.parse(localStorage.getItem('todos')) || [];
-    const userEmail = localStorage.getItem('email');
-
-    const currentDate = new Date();
-    const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    const currentWeekday = weekdays[currentDate.getDay()];
-    const year = currentDate.getFullYear();
-    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-    const day = String(currentDate.getDate()).padStart(2, '0');
-    const completedDate = `${currentWeekday}, ${year}-${month}-${day}`;
-
-    for (let index = 0; index < todos.length; index++) {
-      const todo = todos[index];
-      if (todo.completed) {
-        todo.completedAt = completedDate;
-
-        const response = fetch("/savehistory", {
+async function saveCompletedTaskToHistory(email, completedDate, todoText) {
+    try {
+        const response = await fetch("/savehistory", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                email: userEmail,
+                email: email,
                 completedDate: completedDate,
-                todoText: todo.text
+                todoText: todoText,
+                synced: true
             })
         });
 
-        if (!response.ok) {
-            throw new Error("Sending request error");
+        // if (!response.ok) {
+        //     throw new Error("Sending request error");
+        // }
+
+        const data = await response.json();
+        console.log("Task saved to history:", data);
+    } catch (error) {
+        console.error("Error:", error);
+    }
+}
+
+async function deleteCompletedTaskFromHistory(email, completedDate, todoText, synced) {
+    try {
+        if (!synced) {
+            console.log("Task was not synced with history, skipping deletion.");
+            return;
         }
+        const response = await fetch("/deletetask", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email: email,
+                completedDate: completedDate,
+                todoText: todoText
+            })
+        });
 
-        const data = response.json();
-        console.log("data", data);
-      } else {
-          todo.completedAt = null; // Обнуляем дату, если задача снова становится незавершенной
+        // if (!response.ok) {
+        //     throw new Error("Deleting request error");
+        // }
 
-          const response = fetch("/deletetask", {
-              method: "POST",
-              headers: {
-                  "Content-Type": "application/json"
-              },
-              body: JSON.stringify({
-                  email: userEmail,
-                  completedDate: completedDate,
-                  todoText: todo.text
-              })
-          })
-          .then(response => {
-              if (!response.ok) {
-                  throw new Error("Deleting request error");
-              }
-              return response.json();
-          })
-          .then(data => {
-              console.log("Task deleted:", data);
-          })
-          .catch(error => {
-              console.error("Error:", error);
-          });
-      }
-    };
-};
+        const data = await response.json();
+        if (data.deleted) {
+            console.log("Task deleted from history:", data);
+        } else {
+            console.log("Task not found in history:", data);
+        }
+    } catch (error) {
+        console.error("Error:", error);
+    }
+}
+
+async function checkCompletedTasks() {
+    const todos = JSON.parse(localStorage.getItem('todos')) || [];
+    const userEmail = localStorage.getItem('email');
+
+    for (let index = 0; index < todos.length; index++) {
+        const todo = todos[index];
+        if (todo.completed && todo.completedAt) {
+            saveCompletedTaskToHistory(userEmail, todo.completedAt, todo.text);
+        } else if (!todo.completed && todo.completedAt === null) {
+            deleteCompletedTaskFromHistory(userEmail, todo.completedAt, todo.text);
+        }
+    }
+}
 // checkCompletedTasks
 document.addEventListener('DOMContentLoaded', function() {
     checkCompletedTasks();
@@ -526,7 +560,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 // Вызываем функцию checkCompletedTasks при загрузке страницы
 window.addEventListener('load', checkCompletedTasks);
-
+//history todo list
 document.addEventListener('DOMContentLoaded', async function() {
   const isLoggedIn = localStorage.getItem('loggedIn');
   const historyTodoList = document.getElementById('history-todo-list');
