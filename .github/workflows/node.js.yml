@@ -31,4 +31,7 @@ jobs:
         PASSWORD: ${{ secrets.MONGOATLASPASSWORD }}
       run: |
         npm run deploy    
+    - run: npm ci
+    - run: npm run build --if-present
+    - run: npm test    
 
