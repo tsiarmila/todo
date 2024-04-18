@@ -25,11 +25,9 @@ jobs:
     - name: Install dependencies
       run: npm install
       
-    - name: Deploy
+    - name: Start the application
       env:
         USER_NAME: ${{ secrets.MONGOATLASUSERNAME }}
         PASSWORD: ${{ secrets.MONGOATLASPASSWORD }}
-      
-    - name: Start the application
       run: node app.js    
 
