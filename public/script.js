@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function() {
              }
          });
     }
-    setInterval(renderTodos, 1 * 60 * 1000);
+    setInterval(renderTodos, 12 * 60 * 1000);
 
     function addTodo(event) {
         event.preventDefault();
@@ -245,7 +245,7 @@ document.addEventListener('DOMContentLoaded', function() {
         todos[index].completed = !todos[index].completed;
 
         if (todos[index].completed) {
-            todos[index].completedAt = new Date().toISOString().split(".")[0];
+            todos[index].completedAt = new Date().toISOString().split("T")[0];
         } else {
             todos[index].completedAt = null;
         }

@@ -4,8 +4,10 @@ const mongoose = require("mongoose");
 const validator = require('validator');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
+// const os = require('os');
+const dotenv = require('dotenv');
 const date = require(__dirname + "/date.js");
-// const User = require("./models/User");
+const path = require('path');
 
 const app = express();
 let items = [];
@@ -17,7 +19,13 @@ app.use(bodyParser.json());
 app.use(express.static("public"));
 app.use(cors());
 
-mongoose.connect("mongodb+srv://admin-milatsiar:ogWehgp2BXwWIqG0@cluster0.yhdmafz.mongodb.net/todoDB")
+dotenv.config({ path: 'C:\\data\\.env' });
+// dotenv.config({ path: path.resolve(__dirname, 'data', '.env') });
+const USER_NAME = process.env.MongoAtlasUsername;
+const PASSWORD = process.env.MongoAtlasPassword;
+
+mongoose.connect(`mongodb+srv://${USER_NAME}:${PASSWORD}@cluster0.yhdmafz.mongodb.net/todoDB`);
+
 userSchema = new mongoose.Schema({
   name: String,
   email: String,
