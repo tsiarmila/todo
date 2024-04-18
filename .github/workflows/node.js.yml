@@ -29,5 +29,5 @@ jobs:
       run: env
       
     - name: Start the application
-      run: nodemon app.js    
+      run: node app.js    
 
