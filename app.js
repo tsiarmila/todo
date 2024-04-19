@@ -25,7 +25,7 @@ const USER_NAME = process.env.MONGOATLASUSERNAME;
 const PASSWORD = process.env.MONGOATLASPASSWORD;
 console.log("USER_NAME & PASSWORD",USER_NAME, PASSWORD);
 
-mongoose.connect(`mongodb+srv://${USER_NAME}:${PASSWORD}@cluster0.yhdmafz.mongodb.net/todoDB`);
+mongoose.connect(`mongodb+srv://cluster0.yhdmafz.mongodb.net/todoDB`?retryWrites=true&w=majority, { user: USER_NAME, pass: PASSWORD, useNewUrlParser: true, useUnifiedTopology: true }); //${USER_NAME}:${PASSWORD}@
 
 userSchema = new mongoose.Schema({
   name: String,
