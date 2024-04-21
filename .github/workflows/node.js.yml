@@ -28,5 +28,3 @@ jobs:
     - name: Run env
       run: env
 
-    - name: Start the application
-      run: node app.js
