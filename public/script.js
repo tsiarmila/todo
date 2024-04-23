@@ -182,6 +182,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 todoList.appendChild(todoItem);
             }
 
+            const currentDate = new Date();
+            if (todo && todo.completedAt !== null) {
+                const completionDate = new Date(todo.completedAt);
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                // console.log("completionDate", completionDate, "yesterday", yesterday);
+
+                const completionDateOnly = new Date(completionDate.getFullYear(), completionDate.getMonth(), completionDate.getDate());
+                const yesterdayOnly = new Date(yesterday.getFullYear(), yesterday.getMonth(), yesterday.getDate());
+                // console.log("completionDateOnly", completionDateOnly.getTime(), "yesterdayOnly", yesterdayOnly.getTime());
+
+                if (completionDateOnly.getTime() <= yesterdayOnly.getTime()) {
+                    // Удаляем элемент из localStorage
+                    try {
+                        deleteTodo(index)
+                    } catch (error) {
+                        console.error('Ошибка при удалении элемента из localStorage:', error);
+                    }
+                }
+            }
+
             todoItem.addEventListener('click', function() {
                 editTodo(todoItem, index);
             });
@@ -192,24 +213,6 @@ document.addEventListener('DOMContentLoaded', function() {
             checkDeadlineStatus(todoItem, todo);
 
         });
-        // Clear done yesterday
-        const completedItems = completedList.querySelectorAll('li');
-        const currentDate = new Date();
-         completedItems.forEach(completedItem => {
-             const taskText = completedItem.querySelector('.todo-text').textContent;
-             const todo = todos.find(todo => todo.text === taskText);
-
-             if (todo && todo.completedAt) {
-                 const completionDate = new Date(todo.completedAt);
-
-                 if (completionDate.getDate() === currentDate.getDate() - 1 &&
-                     completionDate.getMonth() === currentDate.getMonth() &&
-                     completionDate.getFullYear() === currentDate.getFullYear()) {
-                     // Удаляем элемент <li> из списка выполненных задач
-                     completedItem.remove();
-                 }
-             }
-         });
     }
     setInterval(renderTodos, 12 * 60 * 1000);
 
