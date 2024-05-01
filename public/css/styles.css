@@ -7,7 +7,7 @@ body {
 .container {
   max-width: 600px;
   margin: 30px auto;
-  padding: 20px;
+  /* padding: 20px; от края до края*/
   border: 1px solid #ccc;
   border-radius: 5px;
 }
@@ -87,7 +87,7 @@ li {
   left: 5px; /* Располагаем изображение слева */
   cursor: pointer;
   opacity: 0.3;
-  margin-right: 5px;
+  margin: 0 5px;
 }
 
 .delete-button {
