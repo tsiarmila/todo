@@ -24,7 +24,7 @@ app.use(cors());
 
 // const PASSWORD = process.env.MONGOATLASPASSWORD;
 
-mongoose.connect(`mongodb+srv://admin-milatsiar:${{secrets.MONGOATLASPASSWORD}}@cluster0.yhdmafz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`);
+mongoose.connect(`mongodb+srv://admin-milatsiar:${MONGOATLASPASSWORD}@cluster0.yhdmafz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`);
 
 userSchema = new mongoose.Schema({
   name: String,
