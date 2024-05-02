@@ -26,6 +26,8 @@ jobs:
       run: npm install
 
     - name: Run env
+      env:
+        PASSWORD: ${{ secrets.MONGOATLASPASSWORD }}
       run: env
             
     - name: Start the application
