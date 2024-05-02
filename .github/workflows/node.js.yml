@@ -2,6 +2,7 @@
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
 
 name: Node.js CI
+${{secrets.MONGOATLASPASSWORD}}
 
 on:
   push:
@@ -27,9 +28,7 @@ jobs:
 
     - name: Run env
       run: env
-      env:
-        MONGOATLASPASSWORD: 'ogWehgp2BXwWqG0'
-      
+            
     - name: Start the application
       run: node app.js
 
