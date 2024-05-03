@@ -24,7 +24,7 @@ app.use(cors());
 
 const MONGOATLASPASSWORD = process.env.MONGOATLASPASSWORD;
 
-mongoose.connect(`mongodb+srv://admin-milatsiar:${MONGOATLASPASSWORD}@cluster0.yhdmafz.mongodb.net/todoDB`);
+mongoose.connect(`mongodb+srv://admin-milatsiar:${MONGOATLASPASSWORD}@cluster0.yhdmafz.mongodb.net/todoDB?authMechanism=DEFAULT&authSource=admin`);
 
 userSchema = new mongoose.Schema({
   name: String,
