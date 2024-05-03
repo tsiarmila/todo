@@ -22,7 +22,7 @@ app.use(cors());
 // dotenv.config({ path: 'C:\\data\\.env' });
 // dotenv.config({ path: path.resolve(__dirname, 'data', '.env') });
 
-const PASSWORD = config.env.MONGOATLASPASSWORD;
+const PASSWORD = process.env.MONGOATLASPASSWORD;
 
 mongoose.connect(`mongodb+srv://admin-milatsiar:${PASSWORD}@cluster0.yhdmafz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`);
 
