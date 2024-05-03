@@ -27,7 +27,7 @@ jobs:
 
     - name: Run env
       env:
-        MONGOATLASPASSWORD: ${ secrets.MONGOATLASPASSWORD }
+        MONGOATLASPASSWORD: ${ MONGOATLASPASSWORD }
       run: env
             
     - name: Start the application
