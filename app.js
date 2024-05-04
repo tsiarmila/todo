@@ -19,8 +19,13 @@ app.use(bodyParser.json());
 app.use(express.static("public"));
 app.use(cors());
 
+app.listen(process.env.PORT || 3000, function(){
+  console.log("Server started on port 3000");
+})
+
 // dotenv.config({ path: 'C:\\data\\.env' });
 // dotenv.config({ path: path.resolve(__dirname, 'data', '.env') });
+// dotenv.config();
 
 const MONGOATLASPASSWORD = process.env.MONGOATLASPASSWORD;
 
@@ -132,8 +137,6 @@ app.post('/savehistory', async function(req, res) {
     await user.save();
     console.log("History saved:", user.savedHistory);
 
-    // mongoose.connection.close();
-
     // Отправляем ответ клиенту, чтобы он знал, что данные были успешно сохранены
     res.status(200).json({ message: "History saved successfully" });
   } catch (error) {
@@ -207,7 +210,3 @@ app.post("/tasks", async function(req, res) {
   }
 
 });
-
-app.listen(process.env.PORT || 3000, function(){
-  console.log("Server started on port 3000");
-})
