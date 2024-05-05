@@ -21,6 +21,7 @@ h1 {
 h2 {
   text-align: center;
   margin: 0;
+  padding-top: 15px;
 }
 h3 {
   display: inline-block;
@@ -261,4 +262,54 @@ footer {
   text-align: center; /* Выравнивание текста по центру */
     font-family: "Sacramento", cursive;
     font-size: 20px;
+}
+
+p {
+	font-size: 2rem;
+	margin: auto;
+	position: relative;
+	line-height: 80%;
+}
+.box {
+  width: 200px;
+  aspect-ratio: 1;
+  --g:/33.334% 33.334% radial-gradient(#000 calc(71% - 1px),#0000 71%) no-repeat;
+  mask: 99.866% 53.662% var(--g),71.762% 95.016% var(--g),21.896% 91.354% var(--g),0.134% 46.338% var(--g),28.238% 4.984% var(--g),78.104% 8.646% var(--g),radial-gradient(100% 100%,#000 28.868%,#0000 calc(28.868% + 1px));
+}
+.bubble {
+  --r: 3px; /* radius of circles */
+  height: 30px;
+  aspect-ratio: 1;
+  padding: calc(1.5*var(--r));
+  background: var(--color-flower);
+  mask:
+    linear-gradient(#000 0 0) no-repeat
+     50%/calc(100% - 6*var(--r)) calc(100% - 6*var(--r)),
+    radial-gradient(farthest-side, yellow 30%, #000 31%, #000 97%, #0000)
+     0 0/calc(6*var(--r)) calc(6*var(--r)) round;
+
+  position: absolute;
+  opacity: 1;
+  transform-origin: 50% 100%;
+  animation: wind_sway 3s linear infinite;
+}
+.bubble::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 6px;
+    height: 6px;
+    background-color: yellow;
+    border-radius: 50%;
+    z-index: 1; /* Чтобы точки находились поверх фона */
+}
+@keyframes wind_sway {
+	25% {
+	  transform: skewX(5deg);
+	}
+	75% {
+	  transform: skewX(-5deg);
+	}
 }

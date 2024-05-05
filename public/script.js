@@ -667,3 +667,20 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
   }
 });
+
+let p = document.querySelector('#logout-button'),
+p_width = p.getBoundingClientRect().width,
+fc = ['red','purple','#5F7FFF','violet','blue','DarkTurquoise','DodgerBlue']
+
+function addBubbles() {
+for(var i=0;i<3;i++) {
+  let b = document.createElement('div')
+  b.className = 'bubble'
+  b.style.bottom = (Math.random() * 90 - 50) + '%'
+  b.style.left = (i * 45) - 205 + '%'
+  b.style.setProperty('--color-flower', fc[Math.floor(Math.random()*fc.length)])
+  b.style.animationDelay = 4 * Math.random() + 's'
+  p.appendChild(b)
+}
+}
+addBubbles()

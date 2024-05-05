@@ -23,7 +23,7 @@ app.listen(process.env.PORT || 3000, function(){
   console.log("Server started on port 3000");
 })
 
-// dotenv.config({ path: 'C:\\data\\.env' });
+dotenv.config({ path: 'C:\\data\\.env' });
 // dotenv.config({ path: path.resolve(__dirname, 'data', '.env') });
 // dotenv.config();
 
