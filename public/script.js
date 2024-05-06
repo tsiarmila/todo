@@ -3,12 +3,14 @@ window.addEventListener('DOMContentLoaded', () => {
   const saveTodoButton = document.getElementById('save-todo-button');
   const logoutButton = document.getElementById('logout-button');
   const historyTodoList = document.getElementById('history-todo-list');
+  const greeting = document.querySelector('h1');
 
   if (isLoggedIn) {
-    if (saveTodoButton && logoutButton && historyTodoList) {
+    if (saveTodoButton && logoutButton && historyTodoList && greeting) {
         saveTodoButton.style.display = 'none';
         logoutButton.style.display = 'block';
         historyTodoList.style.display = "block";
+        greeting.textContent = "ToDo Today";
     }
   } else {
     if (saveTodoButton && logoutButton && historyTodoList) {
@@ -22,6 +24,8 @@ window.addEventListener('DOMContentLoaded', () => {
 document.getElementById('logout-button').addEventListener('click', () => {
   localStorage.removeItem('loggedIn');
   localStorage.removeItem('email');
+  localStorage.removeItem('name');
+  localStorage.removeItem('gender');
   const saveTodoButton = document.getElementById('save-todo-button');
   const historyTodoList = document.getElementById('history-todo-list');
   if (saveTodoButton && historyTodoList) {
@@ -373,6 +377,9 @@ document.getElementById("register-form").addEventListener("submit", async functi
         }
 
         const data = await response.json();
+        const userName = data.name;
+        const gender = data.gender;
+        console.log("data in response", data);
 
         if (data.emailExists) {
               alert("Email already exists. Please LogIn");
@@ -386,6 +393,9 @@ document.getElementById("register-form").addEventListener("submit", async functi
               window.location.href = data.redirectTo;
               localStorage.setItem('loggedIn', 'true');
               localStorage.setItem('email', email);
+              localStorage.setItem('name', userName);
+              localStorage.setItem('gender', gender);
+              console.log("name gender", gender);
         } else {
               // Если не удалось перенаправить, выводим сообщение об успешной обработке
               console.log("Form data received successfully!");
@@ -423,12 +433,17 @@ document.getElementById("login-form").addEventListener("submit", async function(
           throw new Error("Sending request error: " + response.status);
       }
       const data = await response.json();
+      const userName = data.name;
+      const gender = data.gender;
+
       if (data.success) {
       // Пользователь успешно вошел
         if (data.redirectTo) {
           window.location.href = data.redirectTo;
           localStorage.setItem('loggedIn', 'true');
           localStorage.setItem('email', email);
+          localStorage.setItem('name', userName);
+          localStorage.setItem('gender', gender);
         }
       } else {
         // Ошибка при входе
@@ -567,10 +582,13 @@ window.addEventListener('load', checkCompletedTasks);
 document.addEventListener('DOMContentLoaded', async function() {
   const isLoggedIn = localStorage.getItem('loggedIn');
   const historyTodoList = document.getElementById('history-todo-list');
+  let greeting = document.querySelector('h1');
 
   if (isLoggedIn) {
     const email = localStorage.getItem('email');
-    console.log("userEmail", email);
+    const name = localStorage.getItem('name');
+    const gender = localStorage.getItem('gender');
+    console.log("name logged", name);
     try {
       const response = await fetch("/tasks", {
         method: "POST",
@@ -595,6 +613,7 @@ document.addEventListener('DOMContentLoaded', async function() {
           const tasks = item[1];
           const today = new Date();
           const dateString = new Date(date);
+          const dayOfWeek = dateString.toLocaleDateString('en-US', { weekday: 'long' });
 
           let dateHeaderText;
           if (isSameDay(dateString, today)) {
@@ -602,7 +621,7 @@ document.addEventListener('DOMContentLoaded', async function() {
           } else if (isYesterday(dateString, today)) {
             dateHeaderText = "Done Yesterday";
           } else {
-            dateHeaderText = `${date}`;
+            dateHeaderText = `${dayOfWeek}, ${date}`;
           }
 
           const dateContainer = document.createElement('div');
@@ -657,6 +676,16 @@ document.addEventListener('DOMContentLoaded', async function() {
           tasksList.style.display = 'none';
       });
 
+      // Добавляем цветы в зависимости от пола пользователя
+      if (gender === "female") {
+        addFlowers();
+        greeting.textContent = `${capitalize(name)}, What are we doing today?`;
+      } else if (gender === "male") {
+        greeting.textContent = `${capitalize(name)}, What are we doing today?`;
+      } else {
+        greeting.textContent = `${capitalize(name)}, What are we doing today?`;
+      }
+
     } catch (e) {
       console.error("Error:", e);
     }
@@ -665,22 +694,47 @@ document.addEventListener('DOMContentLoaded', async function() {
     if (historyTodoList) {
       historyTodoList.style.display = "none";
     }
+    if (greeting) {
+      greeting.textContent = "ToDo Today";
+    }
+
   }
 });
 
-let p = document.querySelector('#logout-button'),
-p_width = p.getBoundingClientRect().width,
-fc = ['red','purple','#5F7FFF','violet','blue','DarkTurquoise','DodgerBlue']
+function addFlowers() {
+  let p = document.querySelector('#logout-button'),
+  p_width = p.getBoundingClientRect().width,
+  fc = ['red','purple','#5F7FFF','violet','blue','DarkTurquoise','DodgerBlue']
 
-function addBubbles() {
-for(var i=0;i<3;i++) {
-  let b = document.createElement('div')
-  b.className = 'bubble'
-  b.style.bottom = (Math.random() * 90 - 50) + '%'
-  b.style.left = (i * 45) - 205 + '%'
-  b.style.setProperty('--color-flower', fc[Math.floor(Math.random()*fc.length)])
-  b.style.animationDelay = 4 * Math.random() + 's'
-  p.appendChild(b)
+  for(var i=0;i<3;i++) {
+    let b = document.createElement('div')
+    b.className = 'flower'
+    b.style.bottom = (Math.random() * 90 - 50) + '%'
+    b.style.left = (i * 45) - 205 + '%'
+    b.style.setProperty('--color-flower', fc[Math.floor(Math.random()*fc.length)])
+    b.style.animationDelay = 4 * Math.random() + 's'
+    p.appendChild(b)
+  }
 }
+
+function capitalize(str) {
+  return str.replace(/\b\w/g, function(char) {
+    return char.toUpperCase();
+  });
 }
-addBubbles()
+
+
+//
+// if (userName && userSex) {
+//     let greeting = "";
+//     if (userSex === "male") {
+//         greeting = `Привет, ${userName}! Добро пожаловать на наш сайт.`;
+//     } else if (userSex === "female") {
+//         greeting = `Привет, ${userName}! Добро пожаловать на наш сайт.`;
+//     } else {
+//         greeting = `Привет, ${userName}! Добро пожаловать на наш сайт.`;
+//     }
+//     console.log(greeting);
+// } else {
+//     console.log("Не удалось загрузить данные пользователя.");
+// }

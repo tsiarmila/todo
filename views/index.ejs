@@ -7,6 +7,9 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <link rel="stylesheet" href="css/styles.css">
   <link rel="icon" href="images/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Sacramento&display=swap" rel="stylesheet">
 </head>
 <body>
   <button id="save-todo-button">💾 Save This Todo</button>
@@ -14,7 +17,7 @@
 
   <div id="main-container" class="container">
     <h2> <%= kindOfDay %> </h2>
-      <h1>ToDo Today</h1>
+      <h1 id="greeting">ToDo Today</h1>
       <form id="todo-form" action="/" method="POST">
         <input type="text" id="todo-input" name="todo" placeholder="Enter task...">
       <button type="submit">Add Task</button>

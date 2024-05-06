@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const validator = require('validator');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
-// const os = require('os');
+const axios = require('axios'); // Подключаем библиотеку для HTTP-запросов
 const dotenv = require('dotenv');
 const date = require(__dirname + "/date.js");
 const path = require('path');
@@ -33,6 +33,7 @@ mongoose.connect(`mongodb+srv://admin-milatsiar:${MONGOATLASPASSWORD}@cluster0.y
 
 userSchema = new mongoose.Schema({
   name: String,
+  gender: String,
   email: String,
   password: String,
   savedHistory: {
@@ -65,29 +66,33 @@ app.post('/register', async function(req, res) {
     const password = req.body.password;
     const name = req.body.name;
 
-    const saltRounds = 10;
-    const salt = await bcrypt.genSalt(saltRounds);
-    // Хешируем пароль
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    const existingUser = await User.findOne({ email: email });
-    if (existingUser) {
-      return res.json({ emailExists: true });
-    }
-
-    const user = new User ({
-      name: name,
-      email: email,
-      password: hashedPassword,
-      savedHistory: new Map()
-    });
-
     try {
+        const response = await axios.get(`https://api.genderize.io/?name=${name}`);
+        const gender = response.data.gender;
+        console.log("gender", gender);
+        const saltRounds = 10;
+        const salt = await bcrypt.genSalt(saltRounds);
+        // Хешируем пароль
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        const existingUser = await User.findOne({ email: email });
+        if (existingUser) {
+          return res.json({ emailExists: true });
+        }
+
+        const user = new User ({
+          name: name,
+          gender: gender,
+          email: email,
+          password: hashedPassword,
+          savedHistory: new Map()
+        });
+
       await user.save();
-      return res.json({ success: true, message: "New user registered", redirectTo: "/" });
+      return res.json({ success: true, message: "New user registered", redirectTo: "/", name: name, gender: gender });
     } catch (error) {
       console.error("Registration error:", error);
-      return res.json({ success: false, message: "Registration error defind." });
+      return res.json({ success: false, message: "Registration error defined." });
     }
 });
 
@@ -100,13 +105,15 @@ app.post('/login', async function(req, res) {
   const existingUser = await User.findOne({ email: email });
   if (existingUser) {
     const validPassword = await bcrypt.compare(password, existingUser.password);
+    const name = await existingUser.name;
+    const gender = await existingUser.gender;
     if (validPassword) {
-      return res.json({ success: true, user: existingUser, redirectTo: "/" });
+      return res.json({ success: true, user: existingUser, redirectTo: "/", name: name, gender: gender  });
     } else {
-      return res.json({ success: false, message: "Неверный пароль" });
+      return res.json({ success: false, message: "Invalid Password" });
     }
   } else {
-    return res.json({ success: false, message: "Пользователь с таким email не существует" });
+    return res.json({ success: false, message: "The user doesn't exist" });
   }
 });
 
